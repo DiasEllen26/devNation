@@ -22,6 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //rota principal
 Route::get('/programadores', [ProgrammerController::class, 'index']);
 //Enviar para o banco de dados
-Route::post('/programadores', [ProgrammerController::class, 'store']);
+Route::post('/programador', [ProgrammerController::class, 'store']);
 //Trás informações do banco de dados
-Route::get('programadores', [ProgrammerController::class], 'show');
+Route::get('/programadores/{id}', [ProgrammerController::class], 'show');
