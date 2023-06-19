@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Models\Niveis;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Niveis;
 
 class LevelController extends Controller 
 {
@@ -17,9 +18,14 @@ class LevelController extends Controller
     public function store(Request $request) {
         $body = $request->all();
 
-        $request->validate([
-            'nome' => 'required'
+        $validator = Validator::make($request->all(), [
+            'nivel' => 'required|string|max:255'
         ]);
+        
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json(['error' => $errors], 400);
+        }
 
         $register = Niveis::create($body);
 

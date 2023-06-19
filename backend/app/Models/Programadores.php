@@ -10,4 +10,8 @@ class Programadores extends Model
     use HasFactory;
 
     protected $fillable = ['nivel', 'nome', 'sexo', 'datanascimento', 'idade', 'hobby'];
+
+    public function niveis() {
+        return $this->belongsTo(Niveis::class);
+    }
 }
