@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('programadores', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('nivel')->nullable();
+            $table->unsignedBigInteger('nivel')->unsigned();
             $table->string('nome');
             $table->char('sexo');
             $table->date('datanascimento');

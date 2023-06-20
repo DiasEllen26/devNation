@@ -6,21 +6,32 @@ use App\Http\Controllers\ProgrammerController;
 use App\Http\Controllers\LevelController;
 
 
-//rota principal programadores
+//Lista programadores
 Route::get('/programadores', [ProgrammerController::class, 'index']);
 
-//Enviar para o banco de dados
+//Cria um novo programador
 Route::post('/programador', [ProgrammerController::class, 'store']);
 
-//Trás informações do banco de dados
+//Lista programador especifico
 Route::get('/programadores/{id}', [ProgrammerController::class], 'show');
 
-//rota principal niveis
+//Atualiza programador
+Route::put('/programadores/{id}', [ProgrammerController::class, 'update']);
+
+//Deleta programador
+Route::delete('/programadores/{id}', [ProgrammerController::class, 'destroy']);
+
+//Lista niveis
 Route::get('/niveis', [LevelController::class, 'index']);
 
-//Enviar para o banco de dados
+//Cria novo nivel
 Route::post('/nivel', [LevelController::class, 'store']);
 
-//Trás informações do banco de dados
+//Lista nivel especifico
 Route::get('/niveis/{id}', [LevelController::class], 'show');
 
+//Atualiza nível
+Route::put('/niveis/{id}', [LevelController::class, 'update']);
+
+//Deleta nivel
+Route::delete('/niveis/{id}', [LevelController::class, 'destroy']);
