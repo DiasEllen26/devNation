@@ -11,11 +11,30 @@ use Illuminate\Support\Facades\Validator;
 class ProgrammerController extends Controller 
 {
    // Retorna uma lista de todos os programadores
-    public function index() 
+    public function index(Request $request) 
     {
-        $programadores = Programadores::with('niveis')->get();
 
-        return response()->json($programadores);
+    // Obtenha o valor do parâmetro de busca da query string
+    $search = $request->query('search');
+
+    // Construa a consulta inicial com os relacionamentos
+    $query = Programadores::with('niveis');
+
+    // Verifique se o parâmetro de busca está presente
+    if ($search) {
+        // Adicione a cláusula de busca na consulta
+        $query->where(function ($q) use ($search) {
+            $q->where('nome', 'like', '%' . $search . '%')
+                ->orWhere('sexo', 'like', '%' . $search . '%')
+                ->orWhere('hobby', 'like', '%' . $search . '%');
+        });
+    }
+
+    // Execute a consulta e obtenha os resultados
+    $programadores = $query->get();
+
+    // Retorne os resultados em formato JSON
+    return response()->json($programadores);
     }
 
     // Cria um novo registro de programador
@@ -25,7 +44,7 @@ class ProgrammerController extends Controller
 
         // Validação dos campos
         $validator = Validator::make($body, [
-            'nivel_id' => 'required|exists:niveis,id',
+            'nivel' => 'required|exists:niveis,id',
             'nome' => 'required|string|max:255',
             'sexo' => 'required|string|max:255',
             'datanascimento' => 'required|date',
@@ -40,10 +59,10 @@ class ProgrammerController extends Controller
         }
 
         // Cria o registro do programador
-        $programador = Programadores::create($body);
+        $programadores = Programadores::create($body);
 
         // Verifica se o registro foi criado com sucesso
-        if (!$programador) {
+        if (!$programadores) {
             return response()->json(['message' => 'Erro ao registrar programador'], 400);
         }
 
@@ -55,26 +74,26 @@ class ProgrammerController extends Controller
     public function show($id) 
     {
         // Busca o programador com o relacionamento "nivel"
-        $programador = Programadores::with('nivel')->find($id);
+        $programadores = Programadores::with('nivel')->find($id);
         
         // Verifica se o programador foi encontrado
-        if (!$programador) {
+        if (!$programadores) {
             return response()->json(['message' => 'Programador não encontrado'], 404);
         }
 
         // Retorna o programador encontrado
-        return response()->json($programador);
+        return response()->json($programadores);
     }
 
-     // Edita um programador específico pelo ID
+     // Edita um programador específico pelo ID.
      
     public function update(Request $request, $id)
     {
         // Encontra o programador pelo ID
-        $programador = Programador::find($id);
+        $programadores = Programador::find($id);
 
         // Verifica se o programador foi encontrado
-        if (!$programador) { 
+        if (!$programadores) { 
             return response()->json(['message' => 'Programador não encontrado'], 404);
         }
 
@@ -94,8 +113,8 @@ class ProgrammerController extends Controller
         }
 
         // Atualiza os dados do programador
-        $programador->fill($request->all());
-        $programador->save();
+        $programadores->fill($request->all());
+        $programadores->save();
 
         // Retorna a resposta de sucesso com o programador atualizado
         return response()->json(['message' => 'Programador atualizado com sucesso', 'programador' => $programador]);
@@ -105,15 +124,15 @@ class ProgrammerController extends Controller
     public function destroy($id)
     {
         // Encontra o programador pelo ID
-        $programador = Programadores::find($id);
+        $programadores = Programadores::find($id);
 
         // Verifica se o programador foi encontrado
-        if (!$programador) {
+        if (!$programadores) {
             return response()->json(['message' => 'Programador não encontrado'], 404);
         }
 
         // Deleta o programador
-        $programador->delete();
+        $programadores->delete();
 
         // Retorna a mensagem de sucesso
         return response()->json(['message' => 'Programador removido com sucesso'], 204);
