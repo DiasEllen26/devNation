@@ -10,11 +10,20 @@ use App\Models\Niveis;
 
 class LevelController extends Controller 
 {
-    //lista todos 
-    public function index() {
-        $niveis = Niveis::paginate(10);
-
-        return response()->json($niveis);
+    //Retorna uma lista de todos os niveis
+    public function index(Request $request) {
+    $search = $request->query('search');
+    
+    $query = Niveis::query();
+    
+    // Adicione a cláusula de busca, se o parâmetro de busca estiver presente
+    if ($search) {
+        $query->where('nivel', 'like', '%' . $search . '%');
+    }
+    
+    $niveis = $query->paginate(10);
+    
+    return response()->json($niveis);
     }
 
     //recebe requisição post para criar registro no banco
@@ -63,17 +72,27 @@ class LevelController extends Controller
         return response()->json($nivel);
     }
     
+    // Remove um nível, impedindo a exclusão se houver desenvolvedores associados
     public function destroy($id)
     {
-        $nivel = Niveis::find($id);
-    
-        if (!$nivel) {
-            return response()->json(['message' => 'Nível não encontrado'], 404);
+        try {
+            // Encontra o nível pelo ID ou lança uma exceção caso não seja encontrado
+            $nivel = Nivel::findOrFail($id);
+            
+            // Deleta o nível
+            $nivel->delete();
+        } catch (QueryException $e) {
+            if ($e->getCode() === '23000') {
+                // Verifica se a exceção é de violação de chave estrangeira
+                // e retorna uma resposta informando que a exclusão não é possível devido à associação de desenvolvedores
+                return response()->json(['message' => 'Não é possível excluir o nível. Existem desenvolvedores associados a ele.'], 400);
+            }
+            
+            // Caso ocorra outra exceção, como um erro no banco de dados, retorna uma resposta com status 500 (Internal Server Error)
+            return response()->json(['message' => 'Erro ao excluir o nível'], 500);
         }
-    
-        $nivel->delete();
-    
-        return response()->json(null, 204); 
+
+        // Retorna uma resposta com indicando que a exclusão foi bem sucedida
+        return response()->json(null, 204);
     }
-    
 }

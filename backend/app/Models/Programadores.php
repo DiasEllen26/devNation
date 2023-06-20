@@ -14,6 +14,6 @@ class Programadores extends Model
 
     public function niveis()
     {
-        return $this->belongsTo(Niveis::class, 'nivel_id');
+        return $this->belongsTo(Niveis::class, 'nivel');
     }
 }

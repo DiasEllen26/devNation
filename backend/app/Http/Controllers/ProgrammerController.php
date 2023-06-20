@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ProgrammerController extends Controller 
 {
-   // Retorna uma lista de todos os programadores.
+   // Retorna uma lista de todos os programadores
     public function index() 
     {
         $programadores = Programadores::with('niveis')->get();
@@ -18,7 +18,7 @@ class ProgrammerController extends Controller
         return response()->json($programadores);
     }
 
-    // Cria um novo registro de programador.
+    // Cria um novo registro de programador
     public function store(Request $request) 
     {
         $body = $request->all();
@@ -51,7 +51,7 @@ class ProgrammerController extends Controller
         return response()->json(['message' => 'Sucesso ao cadastrar desenvolvedor'], 201);
     }
 
-    //Retorna um registro do banco de dados com base no ID.
+    //Retorna um registro do banco de dados com base no ID
     public function show($id) 
     {
         // Busca o programador com o relacionamento "nivel"
@@ -66,9 +66,8 @@ class ProgrammerController extends Controller
         return response()->json($programador);
     }
 
-    /**
-     * Edita um programador específico pelo ID.
-     */
+     // Edita um programador específico pelo ID
+     
     public function update(Request $request, $id)
     {
         // Encontra o programador pelo ID
