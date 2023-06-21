@@ -11,35 +11,32 @@ use Illuminate\Support\Facades\Validator;
 class ProgrammerController extends Controller 
 {
    // Retorna uma lista de todos os programadores
-    public function index(Request $request) 
-    {
+    public function index(Request $request) {
+        // Obtenha o valor do parâmetro de busca da query string
+        $search = $request->query('search');
 
-    // Obtenha o valor do parâmetro de busca da query string
-    $search = $request->query('search');
+        // Construa a consulta inicial com os relacionamentos
+        $query = Programadores::with('niveis');
 
-    // Construa a consulta inicial com os relacionamentos
-    $query = Programadores::with('niveis');
+        // Verifique se o parâmetro de busca está presente
+        if ($search) {
+            // Adicione a cláusula de busca na consulta
+            $query->where(function ($q) use ($search) {
+                $q->where('nome', 'like', '%' . $search . '%')
+                    ->orWhere('sexo', 'like', '%' . $search . '%')
+                    ->orWhere('hobby', 'like', '%' . $search . '%');
+            });
+        }
 
-    // Verifique se o parâmetro de busca está presente
-    if ($search) {
-        // Adicione a cláusula de busca na consulta
-        $query->where(function ($q) use ($search) {
-            $q->where('nome', 'like', '%' . $search . '%')
-                ->orWhere('sexo', 'like', '%' . $search . '%')
-                ->orWhere('hobby', 'like', '%' . $search . '%');
-        });
-    }
+        // Execute a consulta e obtenha os resultados
+        $programadores = $query->get();
 
-    // Execute a consulta e obtenha os resultados
-    $programadores = $query->get();
-
-    // Retorne os resultados em formato JSON
-    return response()->json($programadores);
+        // Retorne os resultados em formato JSON
+        return response()->json($programadores);
     }
 
     // Cria um novo registro de programador
-    public function store(Request $request) 
-    {
+    public function store(Request $request) {
         $body = $request->all();
 
         // Validação dos campos
@@ -71,8 +68,7 @@ class ProgrammerController extends Controller
     }
 
     //Retorna um registro do banco de dados com base no ID
-    public function show($id) 
-    {
+    public function show($id) {
         // Busca o programador com o relacionamento "nivel"
         $programadores = Programadores::with('nivel')->find($id);
         
@@ -87,8 +83,7 @@ class ProgrammerController extends Controller
 
      // Edita um programador específico pelo ID.
      
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         // Encontra o programador pelo ID
         $programadores = Programador::find($id);
 
@@ -108,7 +103,7 @@ class ProgrammerController extends Controller
         ]);
 
         // Verifica se houve erros na validação
-        if ($validator->fails()) {
+        if ($validator->fails()) { 
             return response()->json(['error' => $validator->errors()], 400);
         }
 
@@ -121,8 +116,7 @@ class ProgrammerController extends Controller
     }
 
     //Deleta um programador específico
-    public function destroy($id)
-    {
+    public function destroy($id) {
         // Encontra o programador pelo ID
         $programadores = Programadores::find($id);
 
