@@ -7,32 +7,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Programadores;
 use App\Models\Niveis;
+use OpenApi\Annotations as OA;
+
 
 class LevelController extends Controller 
-{
+{ 
     //Retorna uma lista de todos os niveis
     public function index(Request $request) {
-    $search = $request->query('search');
+        $search = $request->query('search');
+        $query = Niveis::query();
     
-    $query = Niveis::query();
+        // Adicione a cláusula de busca, se o parâmetro de busca estiver presente
+        if ($search) {
+            $query->where('nivel', 'like', '%' . $search . '%');
+        }
     
-    // Adicione a cláusula de busca, se o parâmetro de busca estiver presente
-    if ($search) {
-        $query->where('nivel', 'like', '%' . $search . '%');
-    }
-    
-    $niveis = $query->paginate(10);
-    
-    return response()->json($niveis);
+        $niveis = $query->paginate(10);
+        return response()->json($niveis);
     }
 
     //recebe requisição post para criar registro no banco
     public function store(Request $request) {
         $body = $request->all();
-
-        $validator = Validator::make($body, [
-            'nivel' => 'required|string|max:255'
-        ]);
+        $validator = Validator::make($body, ['nivel' => 'required|string|max:255']);
         
         if ($validator->fails()) {
             $errors = $validator->errors();
@@ -49,7 +46,6 @@ class LevelController extends Controller
 
     //retorna um registro do banco de dados que for igual a um id
     public function show($id) {
-
         $nivel = $Niveis::find($id);
         
         if (!$nivel) {
@@ -59,22 +55,16 @@ class LevelController extends Controller
         return Niveis::findOffail($id);
     }
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'nivel' => 'required|string',
-        ]);
-    
+    public function update(Request $request, $id){
+        $request->validate(['nivel' => 'required|string',]);
         $nivel = Niveis::findOrFail($id);
-    
         $nivel->update($request->only('nivel'));
     
         return response()->json($nivel);
     }
-    
+   
     // Remove um nível, impedindo a exclusão se houver desenvolvedores associados
-    public function destroy($id)
-    {
+    public function destroy($id){
         try {
             // Encontra o nível pelo ID ou lança uma exceção caso não seja encontrado
             $nivel = Nivel::findOrFail($id);
@@ -82,8 +72,8 @@ class LevelController extends Controller
             // Deleta o nível
             $nivel->delete();
         } catch (QueryException $e) {
+            // Verifica se a exceção é de violação de chave estrangeira
             if ($e->getCode() === '23000') {
-                // Verifica se a exceção é de violação de chave estrangeira
                 // e retorna uma resposta informando que a exclusão não é possível devido à associação de desenvolvedores
                 return response()->json(['message' => 'Não é possível excluir o nível. Existem desenvolvedores associados a ele.'], 400);
             }

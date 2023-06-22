@@ -21,6 +21,8 @@ Route::put('/programadores/{id}', [ProgrammerController::class, 'update']);
 //Deleta programador
 Route::delete('/programadores/{id}', [ProgrammerController::class, 'destroy']);
 
+Route::get('/api/documentacao/', function () { return view('swagger'); });
+
 //Lista niveis
 Route::get('/niveis', [LevelController::class, 'index']);
 
