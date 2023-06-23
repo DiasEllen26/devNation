@@ -1,0 +1,478 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "devNation Routs",
+        "version": "0.0.1"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8880/"
+        }
+    ],
+    "paths": {
+        "/api/niveis": {
+            "get": {
+                "tags": [
+                    "Níveis"
+                ],
+                "summary": "Obter todos os níveis",
+                "operationId": "ba69477b5febe5b79b7d473ca2300af3",
+                "responses": {
+                    "200": {
+                        "description": "Retorna a lista de níveis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Nivel"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Níveis"
+                ],
+                "summary": "Criar um novo nível",
+                "operationId": "1b888cad19da322f4f972a17b927515e",
+                "requestBody": {
+                    "description": "Dados do nível",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NivelInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Nível criado com sucesso"
+                    },
+                    "400": {
+                        "description": "Requisição inválida"
+                    }
+                }
+            }
+        },
+        "/api/niveis/{id}": {
+            "get": {
+                "tags": [
+                    "Níveis"
+                ],
+                "summary": "Obter um nível pelo ID",
+                "operationId": "51c060c342e5c6751eecc618fb096f58",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do nível",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna o nível encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Nivel"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Nível não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Níveis"
+                ],
+                "summary": "Editar um nível",
+                "operationId": "8b8485890960c6f95f2331f1dbd379ef",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do nível",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Dados atualizados do nível",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NivelInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Nível atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Nivel"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Nível não encontrado"
+                    },
+                    "400": {
+                        "description": "Requisição inválida"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Níveis"
+                ],
+                "summary": "Excluir um nível",
+                "operationId": "fcdcfc181a7d1f9da3dcafd0d9602788",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do nível",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Nível removido com sucesso"
+                    },
+                    "400": {
+                        "description": "Não é possível excluir o nível. Existem desenvolvedores associados a ele."
+                    },
+                    "500": {
+                        "description": "Erro ao excluir o nível"
+                    }
+                }
+            }
+        },
+        "/api/programadores": {
+            "get": {
+                "tags": [
+                    "Programadores"
+                ],
+                "summary": "Obter todos os programadores",
+                "operationId": "d42abaa9d2b8f930a5c9c234ab7cf4ab",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Parâmetro de busca para filtrar os programadores por nome, sexo ou hobby",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna a lista de programadores",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Programador"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/programador": {
+            "post": {
+                "tags": [
+                    "Programadores"
+                ],
+                "summary": "Criar um novo programador",
+                "operationId": "ec8aa58a28cea62b0f0c562b65fbded4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProgramadorInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Programador criado com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/programadores/{id}": {
+            "get": {
+                "tags": [
+                    "Programadores"
+                ],
+                "summary": "Obter um programador específico",
+                "operationId": "b69e9de8a808e0d9126499c562736e03",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do programador",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna o programador encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Programador"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "404": {
+                        "description": "Programador não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Programadores"
+                ],
+                "summary": "Excluir um programador específico",
+                "operationId": "388f4b89e96bf77d7b237ef74569c7b6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do programador",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Programador removido com sucesso"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "404": {
+                        "description": "Programador não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Programadores"
+                ],
+                "summary": "Atualizar um programador específico",
+                "operationId": "dbe19fbd8f29749aa1991948b26fdccd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do programador",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProgramadorInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Programador atualizado com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro de validação"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "404": {
+                        "description": "Programador não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Nivel": {
+                "required": [
+                    "id",
+                    "nivel"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "nivel": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "NivelInput": {
+                "required": [
+                    "nivel"
+                ],
+                "properties": {
+                    "nivel": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Programador": {
+                "required": [
+                    "nivel",
+                    "nome",
+                    "sexo",
+                    "datanascimento",
+                    "idade",
+                    "hobby"
+                ],
+                "properties": {
+                    "nivel": {
+                        "type": "string",
+                        "example": "Junior"
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "João"
+                    },
+                    "sexo": {
+                        "type": "string",
+                        "example": "M"
+                    },
+                    "datanascimento": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2000-01-01"
+                    },
+                    "idade": {
+                        "type": "integer",
+                        "example": 21
+                    },
+                    "hobby": {
+                        "type": "string",
+                        "example": "Programação"
+                    }
+                },
+                "type": "object"
+            },
+            "ProgramadorInput": {
+                "required": [
+                    "nivel",
+                    "nome",
+                    "sexo",
+                    "datanascimento",
+                    "idade",
+                    "hobby"
+                ],
+                "properties": {
+                    "nivel": {
+                        "type": "string"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "sexo": {
+                        "type": "string"
+                    },
+                    "datanascimento": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "idade": {
+                        "type": "integer"
+                    },
+                    "hobby": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}

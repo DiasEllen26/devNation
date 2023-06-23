@@ -2,16 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use OpenApi\Annotations as OA;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Programadores;
-use App\Models\Nives;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Programadores;
 
-class ProgrammerController extends Controller 
+
+/**
+ * @OA\Schema(
+ *     schema="Programador",
+ *     required={"nivel", "nome", "sexo", "datanascimento", "idade", "hobby"},
+ *     @OA\Property(property="nivel", type="string", example="Junior"),
+ *     @OA\Property(property="nome", type="string", example="João"),
+ *     @OA\Property(property="sexo", type="string", example="M"),
+ *     @OA\Property(property="datanascimento", type="string", format="date", example="2000-01-01"),
+ *     @OA\Property(property="idade", type="integer", example=21),
+ *     @OA\Property(property="hobby", type="string", example="Programação"),
+ * )
+ * @OA\Schema(
+ *     schema="ProgramadorInput",
+ *     required={"nivel", "nome", "sexo", "datanascimento", "idade", "hobby"},
+ *     @OA\Property(property="nivel", type="string"),
+ *     @OA\Property(property="nome", type="string"),
+ *     @OA\Property(property="sexo", type="string"),
+ *     @OA\Property(property="datanascimento", type="string", format="date"),
+ *     @OA\Property(property="idade", type="integer"),
+ *     @OA\Property(property="hobby", type="string"),
+ * )
+ */
+
+class ProgrammerController extends Controller
 {
-   // Retorna uma lista de todos os programadores
-    public function index(Request $request) {
+
+    /**
+     * @OA\Get(
+     *     path="/api/programadores",
+     *     summary="Obter todos os programadores",
+     *     tags={"Programadores"},
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="Parâmetro de busca para filtrar os programadores por nome, sexo ou hobby",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Retorna a lista de programadores",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Programador")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Não autorizado"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+
+    // Retorna uma lista de todos os programadores
+    public function index(Request $request)
+    {
+
         // Obtenha o valor do parâmetro de busca da query string
         $search = $request->query('search');
 
@@ -35,8 +86,24 @@ class ProgrammerController extends Controller
         return response()->json($programadores);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/programador",
+     *     summary="Criar um novo programador",
+     *     tags={"Programadores"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/ProgramadorInput")
+     *     ),
+     *     @OA\Response(response=201, description="Programador criado com sucesso"),
+     *     @OA\Response(response=400, description="Erro de validação"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+
     // Cria um novo registro de programador
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $body = $request->all();
 
         // Validação dos campos
@@ -67,11 +134,34 @@ class ProgrammerController extends Controller
         return response()->json(['message' => 'Sucesso ao cadastrar desenvolvedor'], 201);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/programadores/{id}",
+     *     summary="Obter um programador específico",
+     *     tags={"Programadores"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID do programador",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Retorna o programador encontrado",
+     *         @OA\JsonContent(ref="#/components/schemas/Programador")
+     *     ),
+     *     @OA\Response(response=401, description="Não autorizado"),
+     *     @OA\Response(response=404, description="Programador não encontrado"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+
     //Retorna um registro do banco de dados com base no ID
-    public function show($id) {
+    public function show($id)
+    {
         // Busca o programador com o relacionamento "nivel"
-        $programadores = Programadores::with('nivel')->find($id);
-        
+        $programadores = Programadores::with('niveis')->find($id);
+
         // Verifica se o programador foi encontrado
         if (!$programadores) {
             return response()->json(['message' => 'Programador não encontrado'], 404);
@@ -81,14 +171,37 @@ class ProgrammerController extends Controller
         return response()->json($programadores);
     }
 
-     // Edita um programador específico pelo ID.
-     
-    public function update(Request $request, $id) {
+    /**
+     * @OA\Patch(
+     *     path="/api/programadores/{id}",
+     *     summary="Atualizar um programador específico",
+     *     tags={"Programadores"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID do programador",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/ProgramadorInput")
+     *     ),
+     *     @OA\Response(response=200, description="Programador atualizado com sucesso"),
+     *     @OA\Response(response=400, description="Erro de validação"),
+     *     @OA\Response(response=401, description="Não autorizado"),
+     *     @OA\Response(response=404, description="Programador não encontrado"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+
+    // Edita um programador específico pelo ID.
+    public function update(Request $request, $id)
+    {
         // Encontra o programador pelo ID
-        $programadores = Programador::find($id);
+        $programadores = Programadores::find($id);
 
         // Verifica se o programador foi encontrado
-        if (!$programadores) { 
+        if (!$programadores) {
             return response()->json(['message' => 'Programador não encontrado'], 404);
         }
 
@@ -103,7 +216,7 @@ class ProgrammerController extends Controller
         ]);
 
         // Verifica se houve erros na validação
-        if ($validator->fails()) { 
+        if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
 
@@ -112,11 +225,30 @@ class ProgrammerController extends Controller
         $programadores->save();
 
         // Retorna a resposta de sucesso com o programador atualizado
-        return response()->json(['message' => 'Programador atualizado com sucesso', 'programador' => $programador]);
+        return response()->json(['message' => 'Programador atualizado com sucesso', 'programador' => $programadores]);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/programadores/{id}",
+     *     summary="Excluir um programador específico",
+     *     tags={"Programadores"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID do programador",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=204, description="Programador removido com sucesso"),
+     *     @OA\Response(response=401, description="Não autorizado"),
+     *     @OA\Response(response=404, description="Programador não encontrado"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+
     //Deleta um programador específico
-    public function destroy($id) {
+    public function destroy($id)
+    {
         // Encontra o programador pelo ID
         $programadores = Programadores::find($id);
 

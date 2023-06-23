@@ -4,16 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Nivels;
+use App\Models\Niveis;
 
 class Programadores extends Model
 {
     use HasFactory;
 
     protected $fillable = ['nivel', 'nome', 'sexo', 'datanascimento', 'idade', 'hobby'];
-
     public function niveis()
     {
-        return $this->belongsTo(Niveis::class, 'nivel');
+        $niveis = $this->belongsTo(Niveis::class, 'id');
+        return $niveis;
     }
 }
