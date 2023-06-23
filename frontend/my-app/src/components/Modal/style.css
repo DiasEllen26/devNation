@@ -1,0 +1,36 @@
+.containerModal {
+    left: 0px;
+    top: 0px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4.5px);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.modalContentStyle {
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    width: 35rem;
+}
+
+.modalIconClose {
+    margin-left: auto;
+}
+
+.modalIconClose button {
+    border: none;
+    background: transparent;
+
+}
+
+.bodyModal {
+    margin-top: 10px;
+}

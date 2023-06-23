@@ -1,17 +1,20 @@
-# Use a imagem base do Node.js
-FROM node:20-alpine
+FROM node:14-alpine as build
 
-# Defina o diretório de trabalho dentro do container
 WORKDIR /app
 
-# Copie o arquivo package.json e package-lock.json (ou yarn.lock) para o diretório de trabalho
 COPY package*.json ./
-
-# Instale as dependências do projeto
 RUN npm install
 
-# Copie todo o código fonte do projeto para o diretório de trabalho
 COPY . .
 
-# Inicie a aplicação quando o container for executado
-CMD ["npm", "start"]
+RUN npm run build
+
+
+# Estágio de produção
+FROM nginx:stable-alpine
+
+COPY --from=build /app/build /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

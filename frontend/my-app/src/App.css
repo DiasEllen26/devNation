@@ -1,38 +1,215 @@
-.App {
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* todo o body*/
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* navbar */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #3d3f95;
+  background: linear-gradient(95deg, #3d3f95 40%, #008dcf 100%);
+  color: #f0f0f0;
+  width: 100%;
+
+}
+
+.img-niveis {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100vw;
+  height: 100vh;
+}
+
+.navbar-left {
+  flex: 1;
+}
+
+.navbar-center {
+  flex: 2;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.navbar-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 10px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+/* logo */
+.logo {
+  width: 100px;
+  height: 100px;
+}
+
+/* menu */
+.menu {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-item {
+  margin: 0 10px;
+}
+
+/* campo de busca */
+.search-input {
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+
+/* menu responsivo */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+  }
+
+  .navbar-center {
+    margin-top: 10px;
+  }
+
+  .navbar-right {
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .search-input {
+    width: 100%;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* dispositivos móveis */
+@media (max-width: 768px) {
+
+  .navbar-center,
+  .navbar-right {
+    display: none;
+  }
+
+  .menu-icon {
+    display: block;
+    padding: 10px;
+    font-size: 20px;
+  }
+
+  .menu-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background-color: #f0f0f0;
+  }
+
+  .menu-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .menu-item {
+    margin: 10px 0;
+  }
+}
+
+/* desktop */
+@media (min-width: 769px) {
+  .menu-mobile {
+    display: none;
+  }
+
+  .menu-desktop {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .menu-item {
+    margin: 0 10px;
+  }
+
+  .menu-icon {
+    display: none;
+  }
+}
+
+/* niveis */
+
+
+.quadrados-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.quadrado {
+  background: blue;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  margin: 10px;
+}
+
+@media (max-width: 768px) {
+  .quadrados-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* botão dos niveis */
+.quadrado {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  background: #3d3f95;
   color: white;
+  text-align: center;
+  padding: 60px;
+  font-size: 20px;
+  border-radius: 8px;
+  margin: 10px;
 }
 
-.App-link {
-  color: #61dafb;
+.nivel {
+  margin-bottom: 20px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+.quadrado-button {
+  background: rgb(0, 141, 207);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.quadrado-button:hover {
+  background: white;
+  color: rgb(0, 141, 207);
+}
+
+
+
+@media (max-width: 768px) {
+  .quadrado {
+    padding: 40px;
+    font-size: 16px;
   }
 }
