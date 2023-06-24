@@ -18,27 +18,40 @@ export function DeletarNivel() {
         if (result.isConfirmed) {
             api.delete(`/niveis/${id}`)
                 .then((response) => {
-                    Swal.fire(
-                        'Deletado com sucesso!',
-                        response.data.message,
-                        'success'
-                    ).then((result) => {
-                        if (result.isConfirmed) {
-                            navigate('/');
-                        }
-                    });
+                    if (response.status === 204) {
+                        Swal.fire(
+                            'Deletado com sucesso!',
+                            response.data.message,
+                            'success'
+                        ).then((result) => {
+                            if (result.isConfirmed) {
+                                navigate('/');
+                            }
+                            return
+                        });
+                    }
                 })
-                .catch((response) => {
-                    const errorResponse = response.response.data;
-                    const errors = Object.values(errorResponse.error);
-                    const errorMenssage = errors.reduce((mensageFinal, error) => {
-                        return mensageFinal + error
-                    }, "");
+                .catch((error) => {
+
+                    if (error.response.status === 400) {
+                        console.log(error.response.data.message)
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Opa algo deu errado!',
+                            text: error.response.data.message,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                navigate('/');
+                                return
+                            }
+                        });
+                        return
+                    }
 
                     Swal.fire({
                         icon: 'error',
                         title: 'Opa algo deu errado!',
-                        text: errorMenssage,
+                        text: error,
                     }).then((result) => {
                         if (result.isConfirmed) {
                             navigate('/');

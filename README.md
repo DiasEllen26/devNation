@@ -124,7 +124,8 @@ Esta é uma API RESTful desenvolvida em Laravel para gerenciar níveis e program
 Siga as instruções abaixo para configurar e executar a API e a interface de usuário:
 
 ### Requisitos
-- Laravel 
+- Laravel
+- Composer
 - Xamp/Mamp/Wamp
 - Docker
 - Docker Compose
@@ -150,18 +151,26 @@ cd backend
    ```
    cp .env.example .env
    ```
+   Caso for Windows:
+   ```
+   copy .env.example .env
+   ```
+6. Execute o seguinte comando para instalar as depêndencias:
+    ```
+    composer install
+    ```
 
-6. Execute o seguinte comando para gerar uma nova chave de aplicativo:
+7. Execute o seguinte comando para gerar uma nova chave de aplicativo:
    ```
    php artisan key:generate
    ```
 
-7. Execute o seguinte comando para criar as tabelas do banco de dados:
+8. Execute o seguinte comando para criar as tabelas do banco de dados:
    ```
    php artisan migrate
    ```
 
-8. O projeto Laravel está pronto para ser executado. Inicie o servidor da web localmente executando o seguinte comando:
+9. O projeto Laravel está pronto para ser executado. Inicie o servidor da web localmente executando o seguinte comando:
    ```
    php artisan serve
    ```
@@ -179,27 +188,28 @@ Após configurar e executar a API no contêiner Docker, você pode configurar e 
 
 3. Acesse o diretório do projeto `devnation` novamente, caso já não esteja nele:
 
+4. Certifique-se de estar no diretório raiz do projeto `devnation`.
 
-1. Abra um novo terminal.
-
-2. Certifique-se de estar no diretório raiz do projeto `devnation`.
-
-3. Acesse o diretório do frontend:
+5. Acesse o diretório do frontend:
    ```
    cd frontend
    ```
+6. Acesse o diretório my-app: 
+    ```
+   cd my-app
+   ```
 
-4. Execute o seguinte comando para instalar as dependências do React:
+7. Execute o seguinte comando para instalar as dependências do React:
    ```
    npm install
    ```
 
-5. Após a instalação das dependências, inicie o servidor de desenvolvimento do React:
+8. Após a instalação das dependências, inicie o servidor de desenvolvimento do React:
    ```
    docker-compose up -d
    ```
 
-6. Agora, você pode acessar o aplicativo React no navegador em [http://localhost:3000](http://localhost:3000).
+9. Agora, você pode acessar o aplicativo React no navegador em [http://localhost:3000](http://localhost:3000).
 
 Certifique-se de que os contêineres da API e do frontend estejam em execução simultaneamente para que o aplicativo React possa consumir a API corretamente. Certifique-se também de que as portas `8000` e `3000` estejam disponíveis em sua máquina local.
 
